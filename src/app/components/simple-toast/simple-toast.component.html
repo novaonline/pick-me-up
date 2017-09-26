@@ -1,0 +1,5 @@
+<div class="toast-container">
+  <div *ngFor="let toastMsg of toastMessages" class="toast {{typeToCssClass(toastMsg)}}" (mouseover)="keepToastMessage(toastMsg)" (mouseout)="resetTimeoutForToastMessage(toastMsg)" >
+    {{toastMsg.message}}
+  </div>
+</div>

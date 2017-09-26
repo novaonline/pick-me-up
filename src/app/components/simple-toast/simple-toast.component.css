@@ -1,0 +1,18 @@
+.toast-container {
+  position: fixed;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+.toast-container .toast.error {
+  color: red;
+}
+
+.toast-container .toast.warning {
+  color: orange;
+}
+
+.toast-container .toast.info {
+  color: blue;
+}
