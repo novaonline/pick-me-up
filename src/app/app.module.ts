@@ -7,7 +7,6 @@ import { AppComponent } from './app.component';
 import { SimpleToastComponent } from './components/simple-toast/simple-toast.component';
 import { TimerComponent } from './components/timer/timer.component';
 import { ConnectionStatusComponent } from './components/connection-status/connection-status.component';
-import { DemoComponent } from './components/demo/demo.component';
 
 @NgModule({
   declarations: [
@@ -15,11 +14,10 @@ import { DemoComponent } from './components/demo/demo.component';
     SimpleToastComponent,
     TimerComponent,
     ConnectionStatusComponent,
-    DemoComponent
   ],
   imports: [
     BrowserModule,
-    RouterModule.forRoot([<Route>{ path: ":id", component: TimerComponent }])
+    RouterModule.forRoot([<Route>{ path: ":room", component: TimerComponent }])
   ],
   providers: [ToastService],
   bootstrap: [AppComponent]

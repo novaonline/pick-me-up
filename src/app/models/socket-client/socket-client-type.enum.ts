@@ -1,4 +1,5 @@
 export enum SocketClientType {
-  SENDER,
-  RECEIVER
+  HOST,
+  GUEST,
+  OVERFLOW
 }
