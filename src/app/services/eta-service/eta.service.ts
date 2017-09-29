@@ -1,3 +1,4 @@
+import { TimeSpanHelper } from './../../helpers/time-span-helper';
 import { SocketConnectionService } from './../socket-connection-service/socket-connection.service';
 import { LocationService } from './../location-service/location.service';
 import { Subject, Observable } from 'rxjs';
@@ -8,7 +9,8 @@ export class EtaService {
 
   private directions$ = new Subject<google.maps.DirectionsLeg>();
   private intervalTime = 10000;
-  private takeBreak = false;
+  private needsABreak = false;
+  private guestLatLng: google.maps.LatLng;
 
   constructor(
     private _socketConnectionService: SocketConnectionService,
@@ -21,28 +23,28 @@ export class EtaService {
   }
 
   private etaReceivedLocations(): void {
-    let self = this;
+    this._locationService.observeCurrentLocation().subscribe(receiverLatLng => {
+      if (!receiverLatLng) {
+        return;
+      }
+      this.guestLatLng = receiverLatLng;
+    });
     this._socketConnectionService.observeLocation().subscribe(senderLatLng => {
-      self._locationService.observeCurrentLocation().subscribe(receiverLatLng => {
-        if (!receiverLatLng) {
-          return;
-        }
-        if (!self.takeBreak) {
-          const request = <google.maps.DirectionsRequest>{
-            origin: receiverLatLng,
-            destination: senderLatLng,
-            travelMode: google.maps.TravelMode.DRIVING
-          };
-          const directionsService = new google.maps.DirectionsService();
-          directionsService.route(request, result => {
-            self.directions$.next(result.routes[0].legs[0]);
-          });
-          self.takeBreak = true;
-          setTimeout(() => {
-            self.takeBreak = false;
-          }, self.intervalTime);
-        }
-      });
+
+      if (!this.needsABreak && this.guestLatLng) {
+        const request = <google.maps.DirectionsRequest>{
+          origin: this.guestLatLng,
+          destination: senderLatLng,
+          travelMode: google.maps.TravelMode.DRIVING
+        };
+        const directionsService = new google.maps.DirectionsService();
+        directionsService.route(request, result => {
+          //result.routes[0].legs[0].duration.text = TimeSpanHelper.convertDurationToString(result.routes[0].legs[0].duration.value)
+          this.directions$.next(result.routes[0].legs[0]);
+        });
+        this.needsABreak = true;
+        setTimeout(() => { this.needsABreak = false; }, this.intervalTime);
+      }
     })
   }
 

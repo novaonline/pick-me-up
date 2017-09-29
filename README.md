@@ -21,3 +21,19 @@ This means we can quickly fetch GPS coordinates without giving it time to provid
 
 ### Predicting
 Since predicting time is easy, we can take advantage of it and reduce the amount of data sent
+
+
+# Setup
+
+## SSL Dev Environment
+We'll need to self sign a certificate.
+
+1. Run below at the root of project to generate a `key` and `cert` 
+  on [windows...](https://stackoverflow.com/questions/31506158/running-openssl-from-a-bash-script-on-windows-subject-does-not-start-with) (remove the extra slash for `-subj` on other OS)
+    ```bash
+    openssl req -nodes -new -x509 -keyout server.key -out server.crt -reqexts SAN    -extensions SAN -subj "//CN=localhost"
+    ```
+    where `XXX` is number of days certificate will be valid for
+    
+1. Trust the certificate on your machine (google `trust self signed ssl certificate`)
+1. Make sure to fully restart your browser.

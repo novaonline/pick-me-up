@@ -1,10 +1,20 @@
 var path = require('path');
+var colors = require('colors');
+var fs = require("fs");
 var express = require('express');
 var app = express();
-var http = require('http').Server(app);
-var io = require('socket.io')(http);
-var colors = require('colors');
+var https = require('https');
 
+var sslOptions = {};
+if (process.env.NODE_ENV != 'production' && process.env.CERT_FILE_PATH) {
+  sslOptions = {
+    key: fs.readFileSync(`${process.env.KEY_FILE_PATH}`),
+    cert: fs.readFileSync(`${process.env.CERT_FILE_PATH}`)
+  };
+}
+
+var server = https.createServer(sslOptions, app);
+var io = require('socket.io')(server);
 
 /**
  * @type {Object.<string,RoomState>}
@@ -13,8 +23,12 @@ var colors = require('colors');
 const serverState = {};
 
 
-//app.use('/', express.static(path.join(__dirname, 'socket-test/dist')))
-
+app.use('/', express.static(path.join(__dirname, '../dist')))
+app.get('/:id', (req, res) => {
+  if (!req.params.id.startsWith("socket")) {
+    res.sendFile(path.join(__dirname, '../dist/index.html'))
+  }
+});
 /* NOTE: keys are named in the client's perspective */
 io.on('connection', (socket) => {
   var room = socket.handshake.query.room;
@@ -25,8 +39,10 @@ io.on('connection', (socket) => {
   socket.on('disconnect', () => handleDisconnection(socket));
 });
 
-http.listen(3000, function () {
-  console.log('listening on *:3000');
+const PORT = process.env.PORT || 3000;
+
+server.listen(PORT, () => {
+  console.log(`listening on port ${PORT}`);
 });
 
 

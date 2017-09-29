@@ -16,7 +16,8 @@
       "dom"
     ],
     "types": [
-      "googlemaps"
+      "googlemaps",
+      "socket.io-client"
     ]
   }
 }

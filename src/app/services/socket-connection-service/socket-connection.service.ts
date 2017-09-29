@@ -1,3 +1,4 @@
+import { environment } from './../../../environments/environment';
 import { LocationService } from './../location-service/location.service';
 import { ToastService } from './../toast-service/toast.service';
 import { Subject, Observable } from 'rxjs';
@@ -10,9 +11,7 @@ import { SocketClientType } from '../../models/socket-client/index';
 @Injectable()
 export class SocketConnectionService {
 
-  // thing that should be refactored out
-  private WEB_SOCKET_URL = "localhost:3000";
-
+  private websocketUrl = `${environment.websocketProtocol}${environment.websocketDomainName}:${environment.websocketPort}`;
   private _roomName: string;
   private _socket: SocketIOClient.Socket;
   private clientType$: Subject<SocketClientType> = new Subject<SocketClientType>();
@@ -28,7 +27,7 @@ export class SocketConnectionService {
 
   public connect(roomName: string): void {
     this._roomName = roomName;
-    this._socket = io.connect(this.WEB_SOCKET_URL, { query: `room=${this._roomName}` });
+    this._socket = io.connect(this.websocketUrl, { secure: true, query: `room=${this._roomName}` });
   }
   public listen(): void {
     this.convertClientTypeSocketEventToObservable();

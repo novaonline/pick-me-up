@@ -1,3 +1,4 @@
+import { TimeSpanHelper } from './../../helpers/time-span-helper';
 import { Subject, Observable, Subscription } from 'rxjs';
 import { ActivatedRoute, Router, ParamMap } from '@angular/router';
 import { Component, OnInit } from '@angular/core';
@@ -14,6 +15,8 @@ export class TimerComponent implements OnInit {
   time: string;
   room: Observable<string>;
   subscriptions: Array<Subscription>;
+  intervalObject: any;
+  timeValue: any;
   constructor(
     private _toastService: ToastService,
     private _socketConnectionService: SocketConnectionService,
@@ -30,7 +33,6 @@ export class TimerComponent implements OnInit {
       .switchMap((params: ParamMap) => {
         return params.get("room");
       });
-    let self = this;
     this._socketConnectionService.connect(this.route.snapshot.paramMap.get('room'));
     this._socketConnectionService.listen();
     this._socketConnectionService.observeHostDisconnection().subscribe(isTrue => {
@@ -55,7 +57,16 @@ export class TimerComponent implements OnInit {
         this.subscriptions.push(
           this._socketConnectionService.observeDurationFromReceiver().subscribe(duration => {
             console.log(duration);
-            self.time = duration.text;
+            this.timeValue = duration.value;
+            this.intervalObject = setInterval(() => {
+              if (this.timeValue - 1 > 0) {
+                this.timeValue -= 1;
+                this.time = TimeSpanHelper.convertDurationToString(this.timeValue);
+              } else {
+                // done!
+                clearTimeout(this.intervalObject);
+              }
+            }, 1000);
           })
         );
       } else if (clientType === SocketClientType.GUEST) {
@@ -63,7 +74,16 @@ export class TimerComponent implements OnInit {
         this.subscriptions.push(
           this._etaService.observeDirections().subscribe(direction => {
             console.log(direction.duration);
-            self.time = direction.duration.text;
+            this.timeValue = direction.duration.value;
+            this.intervalObject = setInterval(() => {
+              if (this.timeValue - 1 > 0) {
+                this.timeValue -= 1;
+                this.time = TimeSpanHelper.convertDurationToString(this.timeValue);
+              } else {
+                // done!
+                clearTimeout(this.intervalObject);
+              }
+            }, 1000);
             this._socketConnectionService.sendDuration(direction.duration);
           })
         );

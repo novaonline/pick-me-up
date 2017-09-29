@@ -5,6 +5,8 @@
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
+    "start:ng:dev": "ng serve --ssl --ssl-key 'f:/ssl/server.key' --ssl-cert 'f:/ssl/server.crt'",
+    "start:server:dev": "nodenv -f server/server.js",
     "build": "ng build",
     "test": "ng test",
     "lint": "ng lint",
@@ -47,6 +49,7 @@
     "karma-coverage-istanbul-reporter": "^1.2.1",
     "karma-jasmine": "~1.1.0",
     "karma-jasmine-html-reporter": "^0.2.2",
+    "node-env-run": "^2.0.1",
     "protractor": "~5.1.2",
     "ts-node": "~3.0.4",
     "tslint": "~5.3.2",
