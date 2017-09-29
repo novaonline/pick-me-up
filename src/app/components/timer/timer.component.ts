@@ -18,6 +18,7 @@ export class TimerComponent implements OnInit {
   subscriptions: Array<Subscription>;
   intervalObject: any;
   timeValue: any;
+  waitText: string = "Waiting for required information..."; // would be nice to should what the app is waiting for
 
   constructor(
     private _toastService: ToastService,

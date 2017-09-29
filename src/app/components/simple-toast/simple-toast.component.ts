@@ -11,7 +11,8 @@ import { Component, OnInit } from '@angular/core';
 export class SimpleToastComponent implements OnInit {
 
   private toastMessages: ToastMessage[];
-
+  private isVisible: boolean = false;
+  private removeDelayMs = 400;
   constructor(private _toastService: ToastService) {
     this.toastMessages = [];
   }
@@ -33,6 +34,7 @@ export class SimpleToastComponent implements OnInit {
    * @memberof SimpleToastComponent
    */
   showToast(toastMessage: ToastMessage): void {
+    this.isVisible = true;
     this.toastMessages.push(toastMessage);
     let self = this;
     toastMessage.timeoutId = setTimeout(() => self.removeToast(toastMessage), toastMessage.msDuration);
@@ -45,7 +47,8 @@ export class SimpleToastComponent implements OnInit {
    * @memberof SimpleToastComponent
    */
   removeToast(toastMessage: ToastMessage): void {
-    this.toastMessages = this.toastMessages.filter(t => t !== toastMessage);
+    this.isVisible = false;
+    setTimeout(() => { this.toastMessages = this.toastMessages.filter(t => t !== toastMessage) }, this.removeDelayMs);
   }
 
   /**

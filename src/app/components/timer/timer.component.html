@@ -1,3 +1,10 @@
-<h1>
-  {{time}}
-</h1>
+<ng-container *ngIf="time; else elseTemplate">
+  <h1>
+    {{time}}
+  </h1>
+</ng-container>
+<ng-template #elseTemplate>
+  <p class="status-message">
+    {{waitText}}
+  </p>
+</ng-template>
