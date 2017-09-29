@@ -12,11 +12,13 @@ import { SocketClientType } from '../../models/socket-client/index';
 
 })
 export class TimerComponent implements OnInit {
+
   time: string;
   room: Observable<string>;
   subscriptions: Array<Subscription>;
   intervalObject: any;
   timeValue: any;
+
   constructor(
     private _toastService: ToastService,
     private _socketConnectionService: SocketConnectionService,
