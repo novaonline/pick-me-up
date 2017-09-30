@@ -11,7 +11,7 @@ import { SocketClientType } from '../../models/socket-client/index';
 @Injectable()
 export class SocketConnectionService {
 
-  private websocketUrl = `${environment.websocketProtocol}${environment.websocketDomainName}:${environment.websocketPort}`;
+  private websocketUrl;
   private _roomName: string;
   private _socket: SocketIOClient.Socket;
   private clientType$: Subject<SocketClientType> = new Subject<SocketClientType>();
@@ -23,11 +23,19 @@ export class SocketConnectionService {
 
   constructor(
     private _toastService: ToastService,
-  ) { }
+  ) {
+    if (environment.websocketProtocol) {
+      this.websocketUrl = `${environment.websocketProtocol}${environment.websocketDomainName}:${environment.websocketPort}`;
+    }
+  }
 
   public connect(roomName: string): void {
     this._roomName = roomName;
-    this._socket = io.connect(this.websocketUrl, { secure: true, query: `room=${this._roomName}` });
+    if (this.websocketUrl) {
+      this._socket = io.connect(this.websocketUrl, { secure: true, query: `room=${this._roomName}` });
+    } else {
+      this._socket = io.connect({ secure: true, query: `room=${this._roomName}` });
+    }
   }
   public listen(): void {
     this.convertClientTypeSocketEventToObservable();
