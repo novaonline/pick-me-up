@@ -24,4 +24,4 @@ before_script:
 
 script:
 - ng build
-- karma start config/karma.conf.js --single-run
+# - ng test
