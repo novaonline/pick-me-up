@@ -25,6 +25,14 @@ var io = require('socket.io')(server);
  */
 const serverState = {};
 
+
+
+app.use('/', express.static(path.join(__dirname, '../dist')))
+app.get('/:id', (req, res) => {
+  if (!req.params.id.startsWith("socket")) {
+    res.sendFile(path.join(__dirname, '../dist/index.html'))
+  }
+});
 app.use((req, res, next) => {
   if (req.headers['x-forwarded-proto'] !== 'https') {
     return res.redirect(
@@ -33,13 +41,6 @@ app.use((req, res, next) => {
   }
   next();
 })
-
-app.use('/', express.static(path.join(__dirname, '../dist')))
-app.get('/:id', (req, res) => {
-  if (!req.params.id.startsWith("socket")) {
-    res.sendFile(path.join(__dirname, '../dist/index.html'))
-  }
-});
 /* NOTE: keys are named in the client's perspective */
 io.on('connection', (socket) => {
   var room = socket.handshake.query.room;
