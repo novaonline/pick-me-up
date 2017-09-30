@@ -2,8 +2,15 @@
 
 This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 1.2.1.
 
-# How it works
+# Demo
 
+Check out the [demo site routed to an example room](https://limitless-journey-63484.herokuapp.com/example). To create your own room...   
+1. Go to [https://limitless-journey-63484.herokuapp.com/`[RoomName]`](https://limitless-journey-63484.herokuapp.com/example) where `[RoomName]` is the desired name for your room/channel.
+1. Send link to another device
+1. Get an ETA
+
+# How it works
+This uses google directions to determine the eta and html5 geolocation to determine the client's location.
 1. A user enters site at `/:room`
 1. If they are the first in the room, they become the `host` otherwise they are a `guest`
     * only allowed two users per room
@@ -37,3 +44,4 @@ We'll need to self sign a certificate.
     
 1. Trust the certificate on your machine (google `trust self signed ssl certificate`)
 1. Make sure to fully restart your browser.
+
