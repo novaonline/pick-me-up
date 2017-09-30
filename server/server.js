@@ -4,16 +4,19 @@ var fs = require("fs");
 var express = require('express');
 var app = express();
 var https = require('https');
+var http = require('http');
 
-var sslOptions = {};
+var server;
 if (process.env.NODE_ENV != 'production' && process.env.CERT_FILE_PATH) {
-  sslOptions = {
+  var sslOptions = {
     key: fs.readFileSync(`${process.env.KEY_FILE_PATH}`),
     cert: fs.readFileSync(`${process.env.CERT_FILE_PATH}`)
   };
+  server = https.createServer(sslOptions, app);
+} else {
+  server = http.createServer(app);
 }
 
-var server = https.createServer(sslOptions, app);
 var io = require('socket.io')(server);
 
 /**
