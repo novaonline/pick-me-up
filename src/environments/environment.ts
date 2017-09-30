@@ -8,4 +8,5 @@ export const environment = {
   websocketProtocol: 'https://',
   websocketDomainName: 'localhost',
   websocketPort: 3000,
+  googleApiKey: 'AIzaSyDF0oZDkh7LqcgsAVxDId12N6b-7IlPptU',
 };
