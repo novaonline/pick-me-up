@@ -1,0 +1,22 @@
+<mat-card>
+  <h1>Estimated Time of Arrival</h1>
+  <h2>How it works</h2>
+  <p>
+    If you want to let someone know how long it'll take you to get to them,
+    <a>enter a room name below</a>. This is like a channel the two of you (and only you two) will tune into.
+  </p>
+  <p>
+    If you want to become a host, enter a room name that is available and you will become the host. It must be an empty room
+    or else you might become a <em>guest</em>.
+  </p>
+  <p>
+    When you become a host, you'll notice a share feature that allows you to share the url to your <em>guest</em>. After
+    that, you'll see the Estmated Time of Arrival
+  </p>
+  <form (ngSubmit)="onSubmit()">
+      <mat-form-field class="room-field">
+          <input matInput placeholder="Enter a Room name">
+        </mat-form-field>
+  </form>
+  <button (click)="onSubmit()" mat-button>Continue</button>
+</mat-card>
