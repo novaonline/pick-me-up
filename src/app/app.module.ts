@@ -9,6 +9,7 @@ import { SimpleToastComponent } from './components/simple-toast/simple-toast.com
 import { TimerComponent } from './components/timer/timer.component';
 import { HomeComponent } from './components/home/home.component';
 import { FormsModule } from '@angular/forms';
+import { ShareComponent } from './components/share/share.component';
 
 @NgModule({
   declarations: [
@@ -16,6 +17,7 @@ import { FormsModule } from '@angular/forms';
     SimpleToastComponent,
     TimerComponent,
     HomeComponent,
+    ShareComponent,
   ],
   imports: [
     MatButtonModule, MatInputModule, MatCardModule,

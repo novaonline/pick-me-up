@@ -12,7 +12,7 @@ import { SocketClientType } from '../../models/socket-client/index';
 
 })
 export class TimerComponent implements OnInit {
-
+  isHost: boolean = false;
   time: string;
   room: Observable<string>;
   subscriptions: Array<Subscription>;
@@ -39,6 +39,10 @@ export class TimerComponent implements OnInit {
     this._socketConnectionService.connect(this.route.snapshot.paramMap.get('room'));
     this._socketConnectionService.listen();
     this._socketConnectionService.observeHostDisconnection().subscribe(isTrue => {
+      this.isHost = false;
+      // disconnect
+      this._socketConnectionService.forceDisconnect();
+      setTimeout(() => this.router.navigate(['']), 1000);
       this.subscriptions.forEach(element => {
         element.unsubscribe();
       });
@@ -50,6 +54,7 @@ export class TimerComponent implements OnInit {
     });
     this._socketConnectionService.observeClientType().subscribe(clientType => {
       if (clientType === SocketClientType.HOST) {
+        this.isHost = true;
         this._socketConnectionService.listenAsHost();
         this.subscriptions.push(
           this._locationService.observeCurrentLocation().subscribe(currentLocation => {
@@ -73,6 +78,7 @@ export class TimerComponent implements OnInit {
           })
         );
       } else if (clientType === SocketClientType.GUEST) {
+        this.isHost = false;
         this._socketConnectionService.listenAsGuest();
         this.subscriptions.push(
           this._etaService.observeDirections().subscribe(direction => {

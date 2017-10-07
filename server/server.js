@@ -48,6 +48,7 @@ io.on('connection', (socket) => {
   socket.on('send-new-user-toast', (room) => handleNewUser(socket, room));
   socket.on('send-host-location', (room, coords) => handleSendHostLocation(socket, room, coords));
   socket.on('send-duration-from-guest', (room, duration) => handleSendDurationFromGuest(socket, room, duration));
+  socket.on('force-disconnect', () => handleForceDisconnect(socket));
   socket.on('disconnect', () => handleDisconnection(socket));
 });
 
@@ -140,6 +141,15 @@ let handleSendHostLocation = (socket, room, coords) => {
 let handleSendDurationFromGuest = (socket, room, duration) => {
   console.log(`guest in room '${room}' sent duration`.gray);
   socket.broadcast.to(room).emit('receive-duration-from-guest', duration);
+}
+
+/**
+ * force socket to disconnect
+ * @param {SocketIO.Socket} socket
+ */
+let handleForceDisconnect = (socket) => {
+  console.log("force-disconnect");
+  socket.disconnect();
 }
 
 /**

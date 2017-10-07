@@ -70,6 +70,9 @@ export class SocketConnectionService {
   public sendDuration(duration: google.maps.Duration) {
     this._socket.emit('send-duration-from-guest', this._roomName, duration);
   }
+  public forceDisconnect() {
+    this._socket.emit('force-disconnect');
+  }
   private convertConnectSocketEventToToastMessage(): void {
     this._socket.on('connect', () => {
       this._socket.emit('send-new-user-toast', this._roomName);
