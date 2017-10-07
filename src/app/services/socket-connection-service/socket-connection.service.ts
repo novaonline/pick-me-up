@@ -97,10 +97,12 @@ export class SocketConnectionService {
         case 'OVERFLOW':
           this.clientType$.next(SocketClientType.OVERFLOW);
           this._toastService.info(`This room is full`);
+          this.forceDisconnect();
           break;
         default:
           this.clientType$.next(SocketClientType.OVERFLOW);
           this._toastService.info(`This room is full`);
+          this.forceDisconnect();
           break;
       }
     });

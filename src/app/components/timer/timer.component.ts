@@ -40,7 +40,6 @@ export class TimerComponent implements OnInit {
     this._socketConnectionService.listen();
     this._socketConnectionService.observeHostDisconnection().subscribe(isTrue => {
       this.isHost = false;
-      // disconnect
       this._socketConnectionService.forceDisconnect();
       setTimeout(() => this.router.navigate(['']), 1000);
       this.subscriptions.forEach(element => {
