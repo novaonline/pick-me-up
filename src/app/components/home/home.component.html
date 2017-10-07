@@ -15,7 +15,7 @@
   </p>
   <form (ngSubmit)="onSubmit()">
       <mat-form-field class="room-field">
-          <input matInput placeholder="Enter a Room name">
+          <input matInput [(ngModel)]="roomName" name="roomName" placeholder="Enter a Room name">
         </mat-form-field>
   </form>
   <button (click)="onSubmit()" mat-button>Continue</button>
