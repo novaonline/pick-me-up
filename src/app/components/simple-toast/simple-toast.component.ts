@@ -10,8 +10,8 @@ import { Component, OnInit } from '@angular/core';
 })
 export class SimpleToastComponent implements OnInit {
 
-  private toastMessages: ToastMessage[];
-  private isVisible: boolean = false;
+  public toastMessages: ToastMessage[];
+  public isVisible: boolean = false;
   private removeDelayMs = 400;
   constructor(private _toastService: ToastService) {
     this.toastMessages = [];
