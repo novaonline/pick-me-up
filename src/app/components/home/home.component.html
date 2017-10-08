@@ -1,22 +1,32 @@
 <mat-card>
   <h1>Estimated Time of Arrival</h1>
-  <h2>How it works</h2>
+  <h2>Purpose</h2>
   <p>
-    If you want to let someone know how long it'll take you to get to them,
-    <a>enter a room name below</a>. This is like a channel the two of you (and only you two) will tune into.
+    This is a simple application that determines the driving time to get from the <em>host</em> to the <em>guest</em>. The
+    <em>host</em> is the first person to enter a room and is typically the person driving to the <em>guest</em>. The <em>guest</em>    is the second person to enter a room and is typically the person waiting for the <em>host</em>. This application is best
+    used to give the <em>guest</em> an idea how long it will take the <em>host</em> to get to them. Keep in mind that the
+    <em>host's</em> movement (or lack of), may change the estimated time to arrive.
   </p>
-  <p>
-    If you want to become a host, enter a room name that is available and you will become the host. It must be an empty room
-    or else you might become a <em>guest</em>.
-  </p>
-  <p>
-    When you become a host, you'll notice a share feature that allows you to share the url to your <em>guest</em>. After
-    that, you'll see the Estmated Time of Arrival
-  </p>
+  <h2>How to use</h2>
+  <ol>
+    <li>
+      <strong>Enter an available room name.</strong>
+    </li>
+    <li>
+      <strong>Send the url to your guest.</strong>
+    </li>
+    <li>
+      <strong>View the estimated time to arrive.</strong>
+    </li>
+  </ol>
+
   <form (ngSubmit)="onSubmit()">
-      <mat-form-field class="room-field">
-          <input matInput [(ngModel)]="roomName" name="roomName" placeholder="Enter a Room name">
-        </mat-form-field>
+    <mat-form-field class="room-field">
+      <input matInput [formControl]="roomNameFormControl" [(ngModel)]="roomName" name="roomName" placeholder="1. Enter an available room name">
+      <mat-error *ngIf="roomNameFormControl.hasError('required')">
+        Room name is <strong>required</strong>
+      </mat-error>
+    </mat-form-field>
   </form>
   <button (click)="onSubmit()" mat-button>Continue</button>
 </mat-card>

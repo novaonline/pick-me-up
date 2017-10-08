@@ -1,3 +1,4 @@
+import { Router } from '@angular/router';
 import { environment } from './../../../environments/environment';
 import { LocationService } from './../location-service/location.service';
 import { ToastService } from './../toast-service/toast.service';
@@ -7,6 +8,7 @@ import * as io from 'socket.io-client';
 import { } from '@types/googlemaps';
 import { } from '@types/socket.io-client';
 import { SocketClientType } from '../../models/socket-client/index';
+import { RoomStatusTypes } from '../../models/room-status-types.enum';
 
 @Injectable()
 export class SocketConnectionService {
@@ -19,10 +21,11 @@ export class SocketConnectionService {
   private duration$: Subject<google.maps.Duration> = new Subject<google.maps.Duration>();
   private disconnectedHost$: Subject<boolean> = new Subject<boolean>();
   private newUser$: Subject<boolean> = new Subject<boolean>();
-
+  private roomStatus$ : Subject<RoomStatusTypes> = new Subject<RoomStatusTypes>();
 
   constructor(
     private _toastService: ToastService,
+    private _router : Router,
   ) {
     if (environment.websocketProtocol) {
       this.websocketUrl = `${environment.websocketProtocol}${environment.websocketDomainName}:${environment.websocketPort}`;
@@ -64,6 +67,9 @@ export class SocketConnectionService {
   public observeNewUser(): Observable<boolean> {
     return this.newUser$.asObservable();
   }
+  public observeRoomStatus(): Observable<RoomStatusTypes> {
+    return this.roomStatus$.asObservable();
+  }
   public sendLocation(latLng: google.maps.LatLng) {
     this._socket.emit('send-host-location', this._roomName, latLng);
   }
@@ -72,6 +78,10 @@ export class SocketConnectionService {
   }
   public forceDisconnect() {
     this._socket.emit('force-disconnect');
+    setTimeout(() => this._router.navigate(['']), 1000);
+  }
+  public checkRoomStatus() {
+    this._socket.emit('room-status',this._roomName);
   }
   private convertConnectSocketEventToToastMessage(): void {
     this._socket.on('connect', () => {

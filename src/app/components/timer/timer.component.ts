@@ -39,13 +39,7 @@ export class TimerComponent implements OnInit {
     this._socketConnectionService.connect(this.route.snapshot.paramMap.get('room'));
     this._socketConnectionService.listen();
     this._socketConnectionService.observeHostDisconnection().subscribe(isTrue => {
-      this.isHost = false;
-      this._socketConnectionService.forceDisconnect();
-      setTimeout(() => this.router.navigate(['']), 1000);
-      this.subscriptions.forEach(element => {
-        element.unsubscribe();
-      });
-      this.subscriptions = []; // reset
+      this.reset();
       this._toastService.warn("The host has left.");
     });
     this._socketConnectionService.observeNewUser().subscribe(isTrue => {
@@ -102,4 +96,14 @@ export class TimerComponent implements OnInit {
     });
   }
 
+  reset(): void {
+    // Best way to do this is to listen to the desctruction lifecycle, unsubscribe
+    // and disconnect
+    this.isHost = false;
+    this.subscriptions.forEach(element => {
+      element.unsubscribe();
+    });
+    this.subscriptions = []; // reset
+    this._socketConnectionService.forceDisconnect();
+  }
 }

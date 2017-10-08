@@ -5,7 +5,7 @@
 
 export const environment = {
   production: false,
-  websocketProtocol: 'https://',
+  websocketProtocol: 'http://',
   websocketDomainName: 'localhost',
   websocketPort: 3000,
   googleApiKey: 'AIzaSyDF0oZDkh7LqcgsAVxDId12N6b-7IlPptU',

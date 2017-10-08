@@ -8,8 +8,9 @@ import { AppComponent } from './app.component';
 import { SimpleToastComponent } from './components/simple-toast/simple-toast.component';
 import { TimerComponent } from './components/timer/timer.component';
 import { HomeComponent } from './components/home/home.component';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { ShareComponent } from './components/share/share.component';
+import { ErrorComponent } from './components/error/error.component';
 
 @NgModule({
   declarations: [
@@ -18,16 +19,20 @@ import { ShareComponent } from './components/share/share.component';
     TimerComponent,
     HomeComponent,
     ShareComponent,
+    ErrorComponent,
   ],
   imports: [
     MatButtonModule, MatInputModule, MatCardModule,
     BrowserModule,
     FormsModule,
+    ReactiveFormsModule,
     BrowserAnimationsModule,
     RouterModule.forRoot(
       [
+        // TODO: need to find a way to make sure :room is only alphanumeric
         <Route>{ path: "", component: HomeComponent },
-        <Route>{ path: ":room", component: TimerComponent }
+        <Route>{ path: ":room", component: TimerComponent },
+        <Route>{ path: "**", component: ErrorComponent }
       ]
     )
   ],

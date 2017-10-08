@@ -46,7 +46,8 @@ export class LocationService {
         }, self.intervalTime);
       }
     }, (position) => {
-      self._toastService.error('Declined location service');
+      self._toastService.error('Unable to fetch location');
+      // add a try again button
     }, { timeout: 10000, maximumAge: 10000})
   }
 }
