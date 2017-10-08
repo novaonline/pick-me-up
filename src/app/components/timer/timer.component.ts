@@ -13,6 +13,7 @@ import { SocketClientType } from '../../models/socket-client/index';
 })
 export class TimerComponent implements OnInit {
   isHost: boolean = false;
+  guestIn: boolean = false;
   time: string;
   room: Observable<string>;
   subscriptions: Array<Subscription>;
@@ -20,6 +21,7 @@ export class TimerComponent implements OnInit {
   timeValue: any;
   waitText: string = "Waiting for required information..."; // would be nice to should what the app is waiting for
 
+  //https://stackoverflow.com/questions/39875686/loading-different-templates-in-a-component-based-on-condition-in-angular-2
   constructor(
     private _toastService: ToastService,
     private _socketConnectionService: SocketConnectionService,
@@ -43,7 +45,9 @@ export class TimerComponent implements OnInit {
       this._toastService.warn("The host has left.");
     });
     this._socketConnectionService.observeNewUser().subscribe(isTrue => {
+
       this._toastService.info("A new user has entered");
+      this.guestIn = true;
     });
     this._socketConnectionService.observeClientType().subscribe(clientType => {
       if (clientType === SocketClientType.HOST) {
@@ -104,6 +108,7 @@ export class TimerComponent implements OnInit {
       element.unsubscribe();
     });
     this.subscriptions = []; // reset
+    this.guestIn = false;
     this._socketConnectionService.forceDisconnect();
   }
 }

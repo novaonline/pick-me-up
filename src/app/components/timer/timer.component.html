@@ -4,10 +4,13 @@
   </h1>
 </ng-container>
 <ng-template #elseTemplate>
-  <p class="status-message">
+  <mat-card *ngIf="isHost && guestIn">
+    <strong>3. View estimated time to arrive.</strong> {{waitText}}
+  </mat-card>
+  <p *ngIf="!isHost" class="status-message">
     {{waitText}}
   </p>
-  <app-share *ngIf="isHost">
+  <app-share *ngIf="isHost && !guestIn">
 
   </app-share>
 </ng-template>

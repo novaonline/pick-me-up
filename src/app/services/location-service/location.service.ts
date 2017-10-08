@@ -16,38 +16,51 @@ export class LocationService {
   }
 
   public observeCurrentLocation(): Observable<google.maps.LatLng> {
-    this.activate();
+    this.getCurrentLocation(<PositionOptions>{ timeout: 10000, maximumAge: 10000 });
+    return this.currentLocation$.asObservable();
+  }
+  public quicklyGetCurrentLocation(): Observable<google.maps.LatLng> {
+    this.getCurrentLocation(<PositionOptions>{ timeout: 1000, maximumAge: 10000 }, true);
     return this.currentLocation$.asObservable();
   }
 
-  private activate(): void {
-    this.getCurrentLocation();
-  }
-
-  private getCurrentLocation(): void {
-    let self = this;
+  private isAvailable(): boolean {
     if ("geolocation" in navigator) {
-      /* geolocation is available */
+      return true;
     } else {
       /* geolocation IS NOT available */
       this._toastService.warn('Geo Location is not available');
-      return;
+      return false;
     }
-    window.navigator.geolocation.watchPosition((position) => {
-      var coords = new google.maps.LatLng(
-        position.coords.latitude,
-        position.coords.longitude
-      );
-      if (!self.takeBreak) {
-        self.currentLocation$.next(coords);
-        self.takeBreak = true;
-        setTimeout(() => {
-          self.takeBreak = false;
-        }, self.intervalTime);
+  }
+
+  private getCurrentLocation(options: PositionOptions, isQuick: boolean = false): void {
+    if (this.isAvailable()) {
+      if (isQuick) {
+        window.navigator.geolocation.getCurrentPosition(this.triggerNewPosition, this.fail, options);
+      } else {
+        window.navigator.geolocation.watchPosition((p) => this.watchForNewPosition(p, this), this.fail, options);
       }
-    }, (position) => {
-      self._toastService.error('Unable to fetch location');
-      // add a try again button
-    }, { timeout: 10000, maximumAge: 10000})
+    }
+  }
+
+  triggerNewPosition(position: Position): void {
+    let c = new google.maps.LatLng(
+      position.coords.latitude,
+      position.coords.longitude
+    );
+    this.currentLocation$.next(c);
+  }
+  watchForNewPosition(position: Position, self: any): void {
+    if (!self.takeBreak) {
+      self.triggerNewPosition(position);
+      self.takeBreak = true;
+      setTimeout(() => self.takeBreak = false, self.intervalTime);
+    }
+  }
+
+  fail(error: PositionError): void {
+    this._toastService.error(`Unable to fetch location: ERROR(${error.code}): ${error.message}`);
+    // add a try again butto
   }
 }
